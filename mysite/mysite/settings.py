@@ -75,13 +75,40 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
-
+'''
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+'''
+
+
+# [START db_setup]
+import os
+if os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine'):
+    # Running on production App Engine, so use a Google Cloud SQL database.
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'HOST': '/cloudsql/tutorial-django01:tutorial-django-db',
+            'NAME': 'polls',
+            'USER': 'root',
+        }
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'polls',
+            'USER': 'pythonapp',
+            'PASSWORD': 'qjqjr',
+            'HOST': '173.194.104.199',
+            'PORT': '3306',
+        }
+    }
+# [END db_setup]
 
 
 # Password validation
@@ -120,4 +147,5 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
+STATIC_ROOT='static'
 STATIC_URL = '/static/'
